@@ -1,0 +1,5 @@
+django 2.1.5
+mysqlclient 1.4.1
+djangorestframework 3.9.1
+markdown 3.0.1
+django_filter 2.1.0
