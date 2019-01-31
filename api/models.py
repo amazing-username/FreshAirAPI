@@ -8,4 +8,4 @@ class Status(models.Model):
     message = models.CharField(max_length=50)
     state = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
