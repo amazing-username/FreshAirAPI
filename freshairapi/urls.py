@@ -26,4 +26,5 @@ router.register('status', views.StatusViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls'))
 ]
