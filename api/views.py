@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Status
+from .permissions import IsOwnerOrReadOnly
 from .serializers import StatusSerializer, UserSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,6 +30,8 @@ class UserList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StatusList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, 
+                          IsOwnerOrReadOnly)
 
     def get(self, request, format=None):
         statuses = Status.objects.all()
@@ -37,7 +40,7 @@ class StatusList(APIView):
     def post(self, request, format=None):
         serializer = StatusSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -70,6 +73,8 @@ class UserDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class StatusDetail(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, 
+                          IsOwnerOrReadOnly)
 
     def get_object(self, pk):
         try:

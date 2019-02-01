@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework import  serializers
 from .models import Status, User
 
 class UserSerializer(serializers.ModelSerializer):
+    statuses = serializers.PrimaryKeyRelatedField(many=True, queryset=Status.objects.all())    
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password')
+        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password', 'statuses')
 
     def create(self, validated_data):
         user = User()
@@ -20,7 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class StatusSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Status
-        fields = ('message', 'state', 'date', 'user')
+        fields = ('id', 'message', 'state', 'date', 'owner')
