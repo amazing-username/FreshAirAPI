@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model, logout as django_logout
+from django.contrib.auth import get_user_model, login as django_login, logout as django_logout
 from rest_framework import permissions, status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -18,11 +18,23 @@ class Login(ObtainAuthToken):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
 
+        previously_logged_in = self.is_first_login(user.pk)
+        django_login(user=user, request=request)
+
         return Response({
+            'id': user.pk,
+            'username': user.username,
             'token': token.key,
-            'user_id': user.pk,
-            'email': user.email
+            'first_login' : previously_logged_in
         })
+
+    def is_first_login(self, pk):
+        user = get_user_model().objects.get(pk=pk)
+
+        if user.last_login is None:
+            return True
+
+        return False
 
 class Logout(ObtainAuthToken):        
 
