@@ -3,11 +3,10 @@ from rest_framework import  serializers
 from .models import Status, User
 
 class UserSerializer(serializers.ModelSerializer):
-    statuses = serializers.PrimaryKeyRelatedField(many=True, queryset=Status.objects.all())    
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password', 'statuses')
+        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password')
 
     def create(self, validated_data):
         user = User()
