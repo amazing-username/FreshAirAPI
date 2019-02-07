@@ -57,11 +57,13 @@ class Register(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                'detail': 'Successfully Registered'
+                'detail': 'Successfully Registered',
+                'registered': True
             })
         else:
             return Response({
-                'detail': 'Registration failed'
+                'detail': 'Registration failed',
+                'registered': False
             })
 
 
