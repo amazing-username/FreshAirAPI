@@ -83,9 +83,6 @@ class UserList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        print('hello your request is')
-        print(request.data)
-        print('\n\n\n')
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -100,6 +97,7 @@ class StatusList(APIView):
     def get(self, request, format=None):
         statuses = Status.objects.all()
         serializer = StatusSerializer(statuses, many=True)
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = StatusSerializer(data=request.data)
