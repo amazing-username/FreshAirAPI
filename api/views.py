@@ -23,6 +23,9 @@ class Login(ObtainAuthToken):
 
         return Response({
             'id': user.pk,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
             'username': user.username,
             'token': token.key,
             'first_login' : previously_logged_in
@@ -122,12 +125,15 @@ class UserDetail(APIView):
 
     def put(self, request, pk, format=None):
         user = self.get_object(pk)
-        serializer = UserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        pass = request.data['password']
+        user.set_password(request.data["password"])
+        user.save()
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+                {
+                    'detail': 'user updated',
+                    'pass': pass
+                    }, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
         user = self.get_object(pk)
@@ -162,3 +168,13 @@ class StatusDetail(APIView):
         status = self.get_object(pk)
         status.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+def change_password(request):
+    if request.method == 'PATCH':
+        return Response({
+            'detail':'is patch'
+            })
+    else:
+        return Response({
+            'detail':'not patch'
+            }, status.HTTP_400_BAD_REQUEST)
