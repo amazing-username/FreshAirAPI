@@ -125,15 +125,15 @@ class UserDetail(APIView):
 
     def put(self, request, pk, format=None):
         user = self.get_object(pk)
-        pass = request.data['password']
-        user.set_password(request.data["password"])
+        passW = request.data['password']
+        
+        user.set_password(passW)
         user.save()
 
         return Response(
                 {
-                    'detail': 'user updated',
-                    'pass': pass
-                    }, status=status.HTTP_200_OK)
+                    'detail': 'User updated'
+                }, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
         user = self.get_object(pk)
