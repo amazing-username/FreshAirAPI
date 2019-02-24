@@ -111,6 +111,8 @@ class StatusList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetail(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, 
+                          IsOwnerOrReadOnly)
 
     def get_object(self, pk):
         try:
